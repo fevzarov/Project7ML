@@ -14,8 +14,6 @@ Using Machine Learning tools, we built a best model for a person of interest ide
 
 * **py File**: https://github.com/fevzarov/Project7ML/blob/master/poi_id.py
 
-* **Short Question Response**: https://github.com/fevzarov/Project7ML/blob/master/Proj7ResponseV2.pdf
+* **Short Question Response**: https://github.com/fevzarov/Project7ML/blob/master/Proj7ResponseV3.pdf
 
-* **Project Review 1 Response**: https://github.com/fevzarov/Project7ML/blob/master/Proj7Change1Response.pdf
-
-
+* **Project Review 1 Response**: https://github.com/fevzarov/Project7ML/blob/master/Proj7Change2Response.pdf
