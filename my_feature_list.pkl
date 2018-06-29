@@ -7,6 +7,8 @@ aS'bonus'
 p3
 aS'salary'
 p4
-aS'stock_to_salary_ratio'
+aS'deferred_income'
 p5
+aS'long_term_incentive'
+p6
 a.

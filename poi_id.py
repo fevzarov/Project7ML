@@ -25,7 +25,7 @@
 # ##### Analyses
 # 
 
-# In[174]:
+# In[204]:
 
 # Base Packages & Path
 
@@ -63,7 +63,7 @@ from time import time
 # ***
 # __Task 1: Select what features you'll use__
 
-# In[175]:
+# In[205]:
 
 ### Task 1: Select what features you'll use. ###
 ### features_list is a list of strings, each of which is a feature name.
@@ -114,7 +114,7 @@ with open("final_project_dataset.pkl", "r") as data_file:
 # 
 # 
 
-# In[176]:
+# In[206]:
 
 ### Missing Value count helps to determine less useful variables
 # Dataframe Table Format
@@ -130,7 +130,7 @@ enron_df.count().sort_values()
 
 # The features are sorted by the number of valid response with the least numberof valied response listed the first. A question we need to address here is whether the "not a number" response here are actually zero or missing values. This is actually a huge portion of a project in real life, especially for a case of this magnitude. This approach is time consuming because we extensive research requirement. A simpler approach would be to impute these zero-or-missing values but things can easily get messy here too. Imputations introduce errors to the data if not performed well. For this study, we assume that these values are actually **zeroes**.
 
-# In[177]:
+# In[207]:
 
 # Dataframe Table Format
 enron_df = pd.DataFrame.from_dict(data_dict, orient = "index")
@@ -149,7 +149,7 @@ for c in enron_df.columns:
 
 # **Which observations have the many missing values?**
 
-# In[178]:
+# In[208]:
 
 ### Missing Variables
 enron_df["nmiss"] = enron_df.isnull().sum(axis = 1)
@@ -157,7 +157,7 @@ print(enron_df["nmiss"].describe())
 print "Median=", (enron_df["nmiss"].median())
 
 
-# In[179]:
+# In[209]:
 
 # Let's Analyze Observation with so Many Missing Data
 enron_df[enron_df["nmiss"]>15]
@@ -167,13 +167,13 @@ enron_df[enron_df["nmiss"]>15]
 # 
 # I noticed that all of these individuals have NaN (zero?) income. They either had either  stocks or received director fees. Both of them may be useful in poi algorithm. So, we've decided to keep these observations. 
 
-# In[180]:
+# In[210]:
 
 poi_count = pd.crosstab(index = enron_df["poi"],columns="count") 
 poi_count
 
 
-# In[181]:
+# In[211]:
 
 ### Since describe produces freq and top=NaN, 
 ### convert 'NaN' from strings to a real 'NaN'
@@ -196,7 +196,7 @@ enron_df.describe().transpose()
 # 
 # ##### Other Data Explorations
 
-# In[182]:
+# In[212]:
 
 # Typical Data Checks
 # print "Dataframe dimension is", enron_df.shape
@@ -211,7 +211,7 @@ enron_df.describe().transpose()
 # ##### Data Cleaning
 # 
 
-# In[183]:
+# In[213]:
 
 ### read in data dictionary, convert to numpy array
 features = ["salary", "bonus"]
@@ -229,7 +229,7 @@ matplotlib.pyplot.ylabel("bonus")
 matplotlib.pyplot.show()
 
 
-# In[184]:
+# In[214]:
 
 # Outlier Identification
 # OLD: enron_df.loc[enron_df.salary>5000000]
@@ -239,14 +239,14 @@ enron_df.loc[enron_df.salary >             enron_df.salary.mean() + (3 * enron_d
 # enron_df.loc['THE TRAVEL AGENCY IN THE PARK', :]
 
 
-# In[185]:
+# In[215]:
 
 # Based on concerns about missing data, I looked into their believability
 # Wheh filter to NaN salary, I discovered a "THE TRAVEL AGENCY IN THE PARK"
 enron_df[pd.isnull(enron_df.salary)]
 
 
-# In[186]:
+# In[216]:
 
 ### Removing "TOTAL" & "THE TRAVEL AGENCY IN THE PARK"
 data_dict.pop('TOTAL', 0)
@@ -265,7 +265,7 @@ matplotlib.pyplot.ylabel("bonus")
 matplotlib.pyplot.show()
 
 
-# In[187]:
+# In[217]:
 
 ### Keep the remaining outliers?
 enron_df[(enron_df.salary>500000) | (enron_df.bonus>3000000)] 
@@ -295,7 +295,7 @@ enron_df[(enron_df.salary>500000) | (enron_df.bonus>3000000)]
 # 
 # Los Angeles Times. Enron's Run Tripped by Arrogance, Greed. By David Streitfel and Lee Romney. January 27, 2002: http://articles.latimes.com/2002/jan/27/news/mn-25002
 
-# In[188]:
+# In[218]:
 
 # Count, by POI
 print "Allocation Across Classes (POI/non-POI)"
@@ -306,7 +306,7 @@ enron_df.pivot_table(index='poi',aggfunc='count').transpose()
 # **Task 3: Create new feature(s)**
 # _plus Feature Reduction_
 
-# In[189]:
+# In[219]:
 
 ### Task 3: Create new feature(s)
 ### Store to my_dataset for easy export below.
@@ -342,7 +342,7 @@ features_financial = features_financial + ['stock_to_salary_ratio']
 features_list = ['poi'] + features_financial + features_email
 
 
-# In[190]:
+# In[220]:
 
 ### Extract features and labels from dataset for local testing
 data = featureFormat(my_dataset, features_list, sort_keys = True)
@@ -358,7 +358,7 @@ print "\nFeatures List:", features_list
 # 
 # We utilized SelectKBest and GridSearchCV to arrive at an ideal number of selected features for this Machine Learning analysis. Based on this analysis, the ideal number of features is 13. If we follow this recommendation strictly, we should go with features with top 13 SelectKBest scores.
 
-# In[191]:
+# In[221]:
 
 from sklearn.datasets import load_iris
 from sklearn.pipeline import Pipeline
@@ -379,25 +379,60 @@ print "Number of Ideal Features:", grid_search.best_params_
 # _Feature Selction: Selecting Best Features for Analyses_
 # 
 # Features with 13 top scores were (highest score is listed first): 
-# *'exercised_stock_options', 'total_stock_value', 'bonus','salary', 'deferred_income', 
-# 'long_term_incentive', 'restricted_stock', 'total_payments', 'from_this_person_to_poi', 'loan_advances', 
-# 'expenses', 'to_messages', 'other'*
+# *
+# 'exercised_stock_options',
+# 'total_stock_value',
+# 'bonus',
+# 'salary',
+# 'deferred_income',
+# 'long_term_incentive',
+# 'restricted_stock',
+# 'total_payments',
+# 'from_messages',
+# 'loan_advances',
+# 'expenses',
+# 'other', and
+# 'from_poi_to_this_person'
+# *
+# 
+# 
 # 
 # We decided to exclude 'total_stock_value' and 'total_payments' because we expected them to be highly correlated with their compoenents. For instance, we expected 'exercised_stock_options' and 'total_stock_value' to be correlated because the former is a component of the latter.
 # 
 # So, we got down to selecting features with top 11 SelectKBest: 
-# *'exercised_stock_options', 'bonus','salary', 'deferred_income', 
-# 'long_term_incentive', 'restricted_stock', 'total_payments', 'from_this_person_to_poi', 'loan_advances', 
-# 'expenses', 'to_messages', 'other'*
+# *
+# 'exercised_stock_options',
+# 'bonus',
+# 'salary',
+# 'deferred_income',
+# 'long_term_incentive',
+# 'restricted_stock',
+# 'from_messages',
+# 'loan_advances',
+# 'expenses',
+# 'other', and
+# 'from_poi_to_this_person'
+# *
 # 
-# When we ran a Naive Bayes algorighm on these 11 features, we obtained this error message:
-# *"The least populated class in y has only 1 member, which is too few. The minimum number of labels for any class cannot be less than 2."*
-# 
-# If given more time, we would explore how many variables or principal components would be adequate in explaining the outcome variable. We have seen some analyses at work where programmers compared number of features vs. percentage of variance explained. Analysts were supposed to select a number of principal components that explains anywhere from 85% to 95% of variance.
-# 
-# For this project, we resorted to top 3 features after excluding total_stock_value. We decided this based on the SelectKBest scores and the error message when features with many "NaN" values were included - e.g. deferred_income has only 49 (34%) non-NaN values.
+# The 11-feature model did not perform any better than the 3-feature model with a Naive Bayes algorithm. So, I ran top-n analyses (n= 3, 4, 5, ..., 11). Their performance metrics were noted below. Models with 4 and 5 variables seems to perform the best. The former and latter performed better in Precision nd Recall, respectively. I went with the 5-feature model due to higher f1 performance metrics.
 
-# In[192]:
+# In[222]:
+
+pd.DataFrame([[0.84277, 0.48281, 0.30900, 0.37683],
+              [0.86307, 0.53081, 0.35750, 0.42725], 
+              [0.86214, 0.52273, 0.40250, 0.45480], 
+              [0.84550, 0.45192, 0.38300, 0.41461], 
+              [0.85021, 0.47145, 0.40050, 0.43309], 
+              [0.76479, 0.24795, 0.31800, 0.27864], 
+              [0.77067, 0.23194, 0.31150, 0.26590], 
+              [0.77753, 0.23712, 0.30150, 0.26546],
+              [0.77753, 0.23691, 0.30100, 0.26514]],
+             columns = ['Accuracy','Precision', 'Recall', 'F1'], 
+             index = ['Top 3','Top 4','Top 5','Top 6','Top 7', \
+                     'Top 8','Top 9','Top 10','Top 11'])
+
+
+# In[223]:
 
 # Univariate Feature Selection
 import sklearn.feature_selection
@@ -432,7 +467,7 @@ sorted(k_best_features.items(), key=operator.itemgetter(1), reverse=True)
 # 
 # **Task 4: Try a varity of classifiers**
 
-# In[193]:
+# In[224]:
 
 ### Task 4: Try a varity of classifiers
 ### Please name your classifier clf for easy export below.
@@ -453,14 +488,16 @@ sorted(k_best_features.items(), key=operator.itemgetter(1), reverse=True)
 # 3. Decision Tree Classifier
 # 
 
-# In[194]:
+# In[225]:
 
 ### 1. Naive Bayes (default parameters)
 
-features_list = ['poi', 'exercised_stock_options','bonus','salary'] 
-# features_list = [ 'exercised_stock_options', 'bonus','salary', 'deferred_income', \
-#                  'long_term_incentive', 'restricted_stock', 'total_payments', \
-#                  'from_this_person_to_poi', 'loan_advances', 'expenses', 'to_messages', 'other']
+# features_list = ['poi', 'exercised_stock_options','bonus','salary'] 
+features_list = ['poi', 'exercised_stock_options', 'bonus', 'salary', 'deferred_income', 'long_term_incentive']
+
+# 'exercised_stock_options', 'bonus', 'salary', 'deferred_income', 'long_term_incentive', \
+# 'restricted_stock', 'from_messages', 'loan_advances', 'expenses', 'other', \
+# 'from_poi_to_this_person'
 
 # Test Size
 features_train, features_test, labels_train, labels_test = train_test_split(features, labels, test_size=0.30, random_state=42)
@@ -486,11 +523,16 @@ print "\nTester Classification\n"
 test_classifier(clf, my_dataset, features_list)
 
 
-# In[195]:
+# Tester Classification
+# 
+# GaussianNB(priors=None)
+# 	Accuracy: 0.84277	Precision: 0.48281	Recall: 0.30900	F1: 0.37683	F2: 0.33297
+
+# In[226]:
 
 ### 2. SVM (default parameters)
 
-features_list = ['poi', 'exercised_stock_options','bonus','salary'] 
+features_list = ['poi', 'exercised_stock_options', 'bonus', 'salary', 'deferred_income', 'long_term_incentive']
 
 # Test Size
 features_train, features_test, labels_train, labels_test = train_test_split(features, labels, test_size=0.30, random_state=42)
@@ -516,11 +558,11 @@ print "\nTester Classification\n"
 test_classifier(clf, my_dataset, features_list)
 
 
-# In[196]:
+# In[227]:
 
 ### 3. Decision Tree Classifier (default parameters)
 
-features_list = ['poi', 'exercised_stock_options','bonus','salary'] 
+features_list = ['poi', 'exercised_stock_options', 'bonus', 'salary', 'deferred_income', 'long_term_incentive']
 
 # Test Size
 features_train, features_test, labels_train, labels_test = train_test_split(features, labels, test_size=0.30, random_state=42)
@@ -553,7 +595,7 @@ test_classifier(clf, my_dataset, features_list)
 # **Task 5: Tune your classifier**
 # 
 
-# In[197]:
+# In[228]:
 
 ### Task 5: Tune your classifier to achieve better than .3 precision and recall 
 ### using our testing script. Check the tester.py script in the final project
@@ -567,8 +609,7 @@ test_classifier(clf, my_dataset, features_list)
 #1. Naive Bayes 
 # No tuning available with the Naive Bayes method
 
-features_list = ['poi', 'exercised_stock_options','bonus','salary'] 
-# features_list = ['poi', 'exercised_stock_options','bonus','salary','deferred_income','long_term_incentive','restricted_stock'] 
+features_list = ['poi', 'exercised_stock_options', 'bonus', 'salary', 'deferred_income', 'long_term_incentive']
 
 # Test Size
 features_train, features_test, labels_train, labels_test = train_test_split(features, labels, test_size=0.30, random_state=42)
@@ -603,12 +644,11 @@ test_classifier(clf, my_dataset, features_list)
 # 
 # _a. SVM without a Scaler Transformation_
 
-# In[198]:
+# In[229]:
 
 ### 2. SVM (Tuned Up, but Unscaled)
 
-features_list = ['poi', 'exercised_stock_options','bonus','salary'] 
-# features_list = ['poi', 'exercised_stock_options','bonus','salary','deferred_income','long_term_incentive','restricted_stock'] 
+features_list = ['poi', 'exercised_stock_options', 'bonus', 'salary', 'deferred_income', 'long_term_incentive']
 
 C = [0.01, 0.1, 1, 10, 100]
 gamma_list = [1, 0.1, 0.01, 0.001, 0.0001]
@@ -638,13 +678,13 @@ for ccc in C:
             print ccc, ggg, svmpar,sum(predict),("{0:.3f}".format(acc)),             ("{0:.3f}".format(prec)), ("{0:.3f}".format(recall)),"\n"
 
 
-# In[199]:
+# In[230]:
 
 # SVM doesn't do a great job in predicting
 # various sets of parameters result in 0.000 precision and recall scores
-# The unsclaes SVM also suffers from "lack of true positive predicitons"
+# f1 < 0.01
 
-features_list = ['poi', 'exercised_stock_options','bonus','salary'] 
+features_list = ['poi', 'exercised_stock_options', 'bonus', 'salary', 'deferred_income', 'long_term_incentive']
 
 # Test Size
 features_train, features_test, labels_train, labels_test = train_test_split(features, labels, test_size=0.3, random_state=42)
@@ -668,7 +708,7 @@ test_classifier(clf, my_dataset, features_list)
 
 # _b. SVM with a Scaler Transformation_
 
-# In[200]:
+# In[231]:
 
 # WRONG?: Scaler Transform
 # SVM doesn't do a great job in predicting
@@ -683,10 +723,13 @@ test_classifier(clf, my_dataset, features_list)
 # = train_test_split(features, labels, test_size=0.3, random_state=42)
 
 
-# In[201]:
+# In[232]:
 
 ## SVM Model (Tuned Up and Scaled)
 from sklearn import svm
+
+features_list =['poi', 'exercised_stock_options','bonus','salary'] 
+# features_list = ['poi', 'exercised_stock_options', 'bonus', 'salary', 'deferred_income', 'long_term_incentive']
 
 ### Min-Max Scaler ###
 # Very likely to be necessary due to wide ranges among variables
@@ -708,7 +751,7 @@ print "\nTester Classification\n"
 tester.test_classifier(svm_grid_search, my_dataset, features_list)
 
 
-# In[202]:
+# In[233]:
 
 ### 2. SVM Tested (Tuned Up and Scaled)
 
@@ -716,7 +759,7 @@ from sklearn import preprocessing
 scaler = preprocessing.MinMaxScaler()
 features = scaler.fit_transform(features)
 
-features_list = ['poi', 'exercised_stock_options', 'bonus', 'salary'] 
+features_list = ['poi', 'exercised_stock_options', 'bonus', 'salary']
 
 # Apply standardization to SVM
 features_trainX = scaler.fit(features_train).transform(features_train)
@@ -736,7 +779,6 @@ acc = accuracy_score(labels_test, predict)
 prec = precision_score(labels_test, predict)
 recall = recall_score(labels_test, predict)
 
-
 print "C | gamma | svmpar | n_pred | acc | prec | recall \n"
 print ccc, ggg, svmpar,sum(predict),("{0:.3f}".format(acc)), ("{0:.3f}".format(prec)), ("{0:.3f}".format(recall)),"\n"
 
@@ -746,15 +788,15 @@ print "\nTester Classification\n"
 tester.test_classifier(svm_grid_search, my_dataset, features_list)
 
 
-# In[203]:
+# In[234]:
 
-### 3. Decision Tree (Tuned Up)
+### 3 a. Decision Tree (Tuned Up)
 
 from sklearn.cross_validation import StratifiedShuffleSplit
 from sklearn import tree
 
-features_list = ['poi', 'exercised_stock_options','bonus','salary'] 
-# features_list = ['poi', 'exercised_stock_options','bonus','salary','deferred_income','long_term_incentive','restricted_stock'] 
+features_list = ['poi', 'exercised_stock_options', 'bonus', 'salary', 'deferred_income', 'long_term_incentive']
+# features_list = ['poi', 'exercised_stock_options', 'bonus', 'salary']
 
 # Test Size
 features_train, features_test, labels_train, labels_test = train_test_split(features, labels, test_size=0.30, random_state=42)
@@ -782,99 +824,150 @@ from tester import test_classifier
 print "Tester Classification\n" 
 test_classifier(clf, my_dataset, features_list)
 
+
+# In[235]:
+
+### 3 b. Decision Tree (Tuned Up, 3 Features)
+
+from sklearn.cross_validation import StratifiedShuffleSplit
+from sklearn import tree
+
+# features_list = ['poi', 'exercised_stock_options', 'bonus', 'salary', 'deferred_income', 'long_term_incentive']
+features_list = ['poi', 'exercised_stock_options', 'bonus', 'salary']
+
+# Test Size
+features_train, features_test, labels_train, labels_test = train_test_split(features, labels, test_size=0.30, random_state=42)
+
+data = featureFormat(my_dataset, features_list, sort_keys = True)  
+labels, features = targetFeatureSplit(data)
+
+dt = tree.DecisionTreeClassifier()
+
+parameters = {'criterion': ('gini','entropy'),
+              'min_samples_split':[2, 3, 5, 10],
+                'max_depth':[5,7,10,15,20,25],
+                'max_leaf_nodes':[10,30,40],
+             'splitter':('best','random')}
+
+
+cv_strata = StratifiedShuffleSplit(labels, 100, random_state = 42)
+grid_search = GridSearchCV(dt, parameters, cv=cv_strata, scoring='f1')
+
+grid_search.fit(features, labels)
+clf = grid_search.best_estimator_
+
+from tester import test_classifier
+
+print "Tester Classification\n" 
+test_classifier(clf, my_dataset, features_list)
+
+
+# DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=5,
+#             max_features=None, max_leaf_nodes=10, min_impurity_split=1e-07,
+#             min_samples_leaf=1, min_samples_split=2,
+#             min_weight_fraction_leaf=0.0, presort=False, random_state=None,
+#             splitter='best')
+# 	Accuracy: 0.82015	Precision: 0.39708	Recall: 0.32600	F1: 0.35805	F2: 0.33810
 
 # _What Happens if We Included the Created New Feature?_
 # 
 # The reviewer suggested that I test my best model with the new, created feature. 
 
-# In[204]:
+# In[236]:
 
-### 3. Decision Tree with New Feature
+### 3. Naive Bayes with New Feature (stock_to_salary_ratio)
 
-from sklearn.cross_validation import StratifiedShuffleSplit
-from sklearn import tree
+# No tuning available with the Naive Bayes method
 
-features_list = ['poi', 'exercised_stock_options','bonus','salary','stock_to_salary_ratio'] 
-# features_list = ['poi', 'exercised_stock_options','bonus','salary','deferred_income','long_term_incentive','restricted_stock'] 
+features_list = ['poi', 'exercised_stock_options', 'bonus', 'salary',                  'deferred_income', 'long_term_incentive', 'stock_to_salary_ratio']
 
 # Test Size
 features_train, features_test, labels_train, labels_test = train_test_split(features, labels, test_size=0.30, random_state=42)
 
-data = featureFormat(my_dataset, features_list, sort_keys = True)  
-labels, features = targetFeatureSplit(data)
-
-dt = tree.DecisionTreeClassifier()
-
-parameters = {'criterion': ('gini','entropy'),
-              'min_samples_split':[2, 3, 5, 10],
-                'max_depth':[5,7,10,15,20,25],
-                'max_leaf_nodes':[10,30,40],
-             'splitter':('best','random')}
-
-
-cv_strata = StratifiedShuffleSplit(labels, 100, random_state = 42)
-grid_search = GridSearchCV(dt, parameters, cv=cv_strata, scoring='f1')
-
-grid_search.fit(features, labels)
-clf = grid_search.best_estimator_
-
-from tester import test_classifier
-
-print "Tester Classification\n" 
-test_classifier(clf, my_dataset, features_list)
-
-
-# In[205]:
-
-pd.DataFrame([[0.81738, 0.38789, 0.32350, 0.35278], 
-              [0.79954, 0.34268, 0.33000, 0.33246]],
-             columns = ['Accuracy','Precision', 'Recall', 'F1'], 
-             index = ['Decision Tree Classifier','With the New Feature'])
-
-
-# The new, created feature (stock-salary ratio) does not seem to enhance the best algorithm's performance. Recall may have increase by 2% but accuracy and precision suffered by larger percentages. So, consistent with SelectKBest findings, the stock-salary ratio feature is not an important feature in predicting POIs. 
-
-# In[206]:
-
-# Final Best Model
-clf = tree.DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=15,
-            max_features=None, max_leaf_nodes=10, min_impurity_split=1e-07,
-            min_samples_leaf=1, min_samples_split=10,
-            min_weight_fraction_leaf=0.0, presort=False, random_state=None,
-            splitter='best')
+clf = GaussianNB()
 clf.fit(features_train, labels_train)
 predict = clf.predict(features_test)
+accuracy = accuracy_score(predict, labels_test)
 acc = accuracy_score(labels_test, predict)
 prec = precision_score(labels_test, predict)
 recall = recall_score(labels_test, predict)
 
+print "Prediction Totals:", sum(predict) 
+print "Accuracy =",("{0:.3f}".format(accuracy))
+print "Acc =",("{0:.3f}".format(acc))
+print "Prec =",("{0:.3f}".format(prec))
+print "Rec =",("{0:.3f}".format(recall))
+
 print "\nConfusion Matrix [0 v. 1]: \n",confusion_matrix(labels_test, predict)
-print "---------------------------------------------------------" 
+
+print "-----------------------------------------------" 
+
 print "\nTester Classification\n" 
 test_classifier(clf, my_dataset, features_list)
 
 
-# In[207]:
+# In[237]:
 
-pd.DataFrame([[0.84277, 0.48281,  0.30900, 0.37683], 
-              [0.85485, 0.63420, 0.13350, 0.22057],
-              [0.81738, 0.38789, 0.32350, 0.35278]],
+pd.DataFrame([[0.86214, 	0.52273, 	0.40250, 	0.45480], 
+              [0.84743,0.46444,0.44400,0.45399]],
              columns = ['Accuracy','Precision', 'Recall', 'F1'], 
-             index = ['Gaussian Naive Bayes','SVM','Decision Tree Classifier'])
+             index = ['Naive Bayes','With the New Feature'])
+
+
+# The new, created feature (stock-salary ratio) does not seem to enhance the best algorithm's performance. Recall may have increase by 4% but accuracy and precision suffered by larger percentages. So, consistent with SelectKBest findings, the stock-salary ratio feature is not an important feature in predicting POIs. 
+
+# In[238]:
+
+# Final Best Model: Naive Bayes 
+# No tuning available with the Naive Bayes method
+
+features_list = ['poi', 'exercised_stock_options', 'bonus', 'salary', 'deferred_income', 'long_term_incentive']
+
+# Test Size
+features_train, features_test, labels_train, labels_test = train_test_split(features, labels, test_size=0.30, random_state=42)
+
+clf = GaussianNB()
+clf.fit(features_train, labels_train)
+predict = clf.predict(features_test)
+accuracy = accuracy_score(predict, labels_test)
+acc = accuracy_score(labels_test, predict)
+prec = precision_score(labels_test, predict)
+recall = recall_score(labels_test, predict)
+
+print "Prediction Totals:", sum(predict) 
+print "Accuracy =",("{0:.3f}".format(accuracy))
+print "Acc =",("{0:.3f}".format(acc))
+print "Prec =",("{0:.3f}".format(prec))
+print "Rec =",("{0:.3f}".format(recall))
+
+print "\nConfusion Matrix [0 v. 1]: \n",confusion_matrix(labels_test, predict)
+
+print "-----------------------------------------------" 
+
+print "\nTester Classification\n" 
+test_classifier(clf, my_dataset, features_list)
+
+
+# In[239]:
+
+pd.DataFrame([[0.86214, 	0.52273, 	0.40250, 	0.45480], 
+              [0.85485, 	0.63420, 	0.13350, 	0.22057],
+              [0.83621, 	0.37720, 	0.22500, 	0.28187],
+              [0.81777, 	0.38879, 	0.32250, 	0.35256]],
+             columns = ['Accuracy','Precision', 'Recall', 'F1'], 
+             index = ['Gaussian Naive Bayes','SVM','Decision Tree Classifier (DTC)', 'DTC, 3 Features'])
 
 
 # The tuned up Gaussian Naive bayes and Decision Tree Classifier models satisfied the 0.3 precision and recal recall requirements. 
 # 
-# NB actually performed quite well for an algorithm that seemed to me very rigid – because researchers can’t alter the parameters. In fact, NB performed slightly better for many of the performance metrics such as Accuracy (0.84 vs. 0.82 for Decision Tree Classifier). 
-# 
-# However, I am choosing Decision Tree Classifier as the best final model due to its flexibility and its ample room for improvement.
+# Due to better performance metrics, we selected Naive Bayes as the best algorithm.  
 # 
 # ***
 # 
 # **Task 6: Dump your classifier, dataset, and features_list **
 # 
 
-# In[208]:
+# In[240]:
 
 ### Dump your classifier, dataset, and features_list so anyone can
 ### check your results. You do not need to change anything below, but make sure
