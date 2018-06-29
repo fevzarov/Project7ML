@@ -8,12 +8,14 @@ In 2000, Enron was one of the largest companies in the United States. By 2002, i
 
 Using Machine Learning tools, we built a best model for a person of interest identifier based on financial and email data made public as a result of the Enron scandal. The dataset provided by Udacity has the persons of interest in the fraud case tagged, which is defined by individuals who were indicted, reached a settlement or plea deal with the government, or testified in exchange for prosecution immunity.
 
-**ipynb File**: https://github.com/fevzarov/Project7ML/blob/master/poi_id.ipynb
+**Submissioin Files**
 
-**py File**: https://github.com/fevzarov/Project7ML/blob/master/poi_id.py
+* **ipynb File**: https://github.com/fevzarov/Project7ML/blob/master/poi_id.ipynb
 
-**Short Question Response**: https://github.com/fevzarov/Project7ML/blob/master/Proj7ResponseV2.pdf
+* **py File**: https://github.com/fevzarov/Project7ML/blob/master/poi_id.py
 
-**Project Review 1 Response**: https://github.com/fevzarov/Project7ML/blob/master/Proj7Change1Response.pdf
+* **Short Question Response**: https://github.com/fevzarov/Project7ML/blob/master/Proj7ResponseV2.pdf
+
+* **Project Review 1 Response**: https://github.com/fevzarov/Project7ML/blob/master/Proj7Change1Response.pdf
 
 
