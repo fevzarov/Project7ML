@@ -7,4 +7,6 @@ aS'bonus'
 p3
 aS'salary'
 p4
+aS'stock_to_salary_ratio'
+p5
 a.
